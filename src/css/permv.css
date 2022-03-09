@@ -1,14 +1,15 @@
 .box {
+  /* 	-moz-display: flex;
+	-webkit-display: flex; */
   display: flex;
-  -moz-display: flex;
-  -webkit-display: flex;
   flex-direction: column;
-  width: 200px;
+  width: 18%;
   box-shadow: 0 0 6px #ddd;
   border: 1px solid #ddd;
+  min-width: 200px;
   max-height: 500px;
-  padding: 4px;
-  margin: 6px;
+  padding: 8px;
+  margin: 6px 3px;
   align-items: center;
   cursor: pointer;
 }
@@ -16,7 +17,14 @@
   font-size: 16px;
 }
 .box h4 {
+  /* width不设置，text-overflow:ellipsis;也是失效的，h4不固定宽度，无法overflow的 */
+  width: 100%;
   font-size: 12px;
+  overflow: hidden;
+  white-space: nowrap;
+  /* 文本溢出显示省略号，需要配合white-space和overflow两个属性才起作用 */
+  text-overflow: ellipsis;
+  align-self: flex-start;
 }
 .box .img {
   height: 160px;

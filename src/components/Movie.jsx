@@ -2,7 +2,6 @@ import React from 'react';
 import { Layout, Menu } from 'antd';
 import { Link, Route } from 'react-router-dom';
 import SubMovie from './SubMovie.jsx';
-
 const { Content, Sider } = Layout;
 // 导入电影展示的内容页面
 export default class Movie extends React.Component {
@@ -23,16 +22,16 @@ export default class Movie extends React.Component {
 				<Sider width={200} style={{ background: '#fff' }}>
 					<Menu
 						mode="inline"
-						defaultSelectedKeys={['1']}
+						defaultSelectedKeys={window.location.hash.slice(2)}
 						style={{ height: '100%', borderRight: 0 }}
 					>
-						<Menu.Item key="1">
+						<Menu.Item key="movie/in_theaters/1">
 							<Link to="/movie/in_theaters/1">正在热映</Link>
 						</Menu.Item>
-						<Menu.Item key="2">
+						<Menu.Item key="movie/coming_soon/1">
 							<Link to="/movie/coming_soon/1">即将上映</Link>
 						</Menu.Item>
-						<Menu.Item key="3">
+						<Menu.Item key="movie/top250/1">
 							<Link to="/movie/top250/1">Top250</Link>
 						</Menu.Item>
 					</Menu>
@@ -41,7 +40,7 @@ export default class Movie extends React.Component {
 					<Content
 						style={{
 							background: '#fff',
-							padding: 24,
+							padding: 12,
 							margin: 0,
 							height: '100%'
 						}}
@@ -54,5 +53,8 @@ export default class Movie extends React.Component {
 				</Layout>
 			</Layout>
 		);
+	}
+	UNSAFE_componentWillMount() {
+		console.log(window.location.hash);
 	}
 }
