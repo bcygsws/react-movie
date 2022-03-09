@@ -248,14 +248,14 @@ module.exports = {
 			},
 			// // 处理index.html中的图片：webpack解析html标签中img引入的图片
 			// // 参考文档：https://www.cnblogs.com/fightjianxian/p/12441638.html
-			// {
-			// 	test: /\.(html|htm)$/i,
-			// 	// use: 'html-withimg-loader'
-			// 	// html-loader解析图片，依据的是项目中原来index.html<img src="./images/bale.jpg"/>的位置；而html-withimg-loader则依据的是托管在内存中的根路径
-			// 	use: {
-			// 		loader: 'html-loader'
-			// 	}
-			// },
+			{
+				test: /\.(html|htm)$/i,
+				// use: 'html-withimg-loader'
+				// html-loader解析图片，依据的是项目中原来index.html<img src="./images/bale.jpg"/>的位置；而html-withimg-loader则依据的是托管在内存中的根路径
+				use: {
+					loader: 'html-loader'
+				}
+			},
 			// // url-loader和file-loader是什么关系呢？简答地说，url-loader封装了file-loader。url-loader不依赖于
 			// // file-loader，即使用url-loader时，只需要安装url-loader即可，不需要安装file-loader，因为url-loader
 			// // 内置了file-loader。通过上面的介绍，我们可以看到，url-loader工作分两种情况：1.文件大小小于limit参数，
@@ -282,48 +282,48 @@ module.exports = {
 			//  * 						}
 			//  * }}
 			//  */
-			// {
-			// 	test: /\.(jpeg|bmp|png|jpg|gif)$/i,
-			// 	use: [
-			// 		{
-			// 			// 图片大小126428
-			// 			loader: 'url-loader',
-			// 			options: {
-			// 				esModule: false, // 新版file-loader使用了ES Module模块化方式，为避免和html-loader采用的common.js冲突，
-			// 				// 将esModule配置为false就可以解决这个问题
-			// 				outputPath: './images',
-			// 				// publicPath: '../images', // 必须有，否则打包时，抽离的样式中url(/images)图片变成了和css同级了
-			// 				// child.jpg图片大写为213,721
-			// 				// limit: 214000, // 图片大小小于limit,图片转化为base64格式
-			// 				limit: 120 * 1024, // 图片的大小1个为123k,一个为208k。取两个最小值。limit小于最小值，才会打包成图片需要安装file-loader，limit<图片实际值，才会显示name格式的名字
-			// 				name: '[name]-[hash:8].[ext]'
-			// 			}
-			// 		},
-			// 		{
-			// 			loader: 'image-webpack-loader',
-			// 			options: {
-			// 				mozjpeg: {
-			// 					progressive: true
-			// 				},
-			// 				// optipng.enabled: false will disable optipng
-			// 				optipng: {
-			// 					enabled: false
-			// 				},
-			// 				pngquant: {
-			// 					quality: [0.65, 0.9],
-			// 					speed: 4
-			// 				},
-			// 				gifsicle: {
-			// 					interlaced: false
-			// 				},
-			// 				// the webp option will enable WEBP
-			// 				webp: {
-			// 					quality: 75
-			// 				}
-			// 			}
-			// 		}
-			// 	]
-			// },
+			{
+				test: /\.(jpeg|bmp|png|jpg|gif)$/i,
+				use: [
+					{
+						// 图片大小126428
+						loader: 'url-loader',
+						options: {
+							esModule: false, // 新版file-loader使用了ES Module模块化方式，为避免和html-loader采用的common.js冲突，
+							// 将esModule配置为false就可以解决这个问题
+							outputPath: './images',
+							// publicPath: '../images', // 必须有，否则打包时，抽离的样式中url(/images)图片变成了和css同级了
+							// child.jpg图片大写为213,721
+							// limit: 214000, // 图片大小小于limit,图片转化为base64格式
+							limit: 120 * 1024, // 图片的大小1个为123k,一个为208k。取两个最小值。limit小于最小值，才会打包成图片需要安装file-loader，limit<图片实际值，才会显示name格式的名字
+							name: '[name]-[hash:8].[ext]'
+						}
+					}
+					// 		{
+					// 			loader: 'image-webpack-loader',
+					// 			options: {
+					// 				mozjpeg: {
+					// 					progressive: true
+					// 				},
+					// 				// optipng.enabled: false will disable optipng
+					// 				optipng: {
+					// 					enabled: false
+					// 				},
+					// 				pngquant: {
+					// 					quality: [0.65, 0.9],
+					// 					speed: 4
+					// 				},
+					// 				gifsicle: {
+					// 					interlaced: false
+					// 				},
+					// 				// the webp option will enable WEBP
+					// 				webp: {
+					// 					quality: 75
+					// 				}
+					// 			}
+					// 		}
+				]
+			},
 			// 解析js或者jsx文件的新语法
 			{
 				test: /\.js(x?)$/,

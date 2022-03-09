@@ -191,3 +191,14 @@
 -   在发送数据处，前三、后三，即：getChildContext 方法，childContextTypes 类型校验
 -   在接收数据处，后二，contextTypes
 -   然后，获取值使用，this.context.[键名]
+
+## 十、项目问题汇总
+
+### 问题一
+
+-   ant 框架，提供的 Layout 布局中，点击不同的路由可以实现切换，选中的路由背景为深蓝色的。但是，当手动刷新一下页面后，路由地址栏没有发生变化，但是选中的路由深蓝色背景消失，而【首页】上显示深蓝色背景，切换到\/movie 和\/about 都出现这个问题。
+-   原因是：确定哪个路由选中，是有 Menu 标签中 defaultSelectedKeys="['1']"控制的。手动刷新页面后，App 组件重新创建，Menu.Item 中的 key 值销毁，无法和 defaultSelectedKeys 建立关联
+
+### 解决
+
+-   借助 BOM 中的 location 对象，window.location 能够在组件 App 创建阶段拿到当前，手动刷新页面后保持不变的路由 hash 值。将该值跟踪 defaultSelectedKeys 中的值。defaultSelectedKeys={window.location.hash.slice(2)}。另外一种方式是，在钩子 componentWillMount 中使用 this.setState()方法，改变挂载在 state 对象上的值

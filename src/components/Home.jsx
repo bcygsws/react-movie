@@ -63,8 +63,12 @@ export default class Home extends React.Component {
 	render() {
 		return (
 			<div>
-				<h3>这是Home组件</h3>
+				<h3>这是home组件</h3>
 			</div>
 		);
 	}
+	// 生命周期钩子
+	// UNSAFE_componentWillMount() {
+	// 	console.log(this.props);
+	// }
 }

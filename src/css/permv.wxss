@@ -1,0 +1,29 @@
+.box {
+  display: flex;
+  -moz-display: flex;
+  -webkit-display: flex;
+  flex-direction: column;
+  width: 200px;
+  box-shadow: 0 0 6px #ddd;
+  border: 1px solid #ddd;
+  max-height: 500px;
+  padding: 4px;
+  margin: 6px;
+  align-items: center;
+  cursor: pointer;
+}
+.box h2 {
+  font-size: 16px;
+}
+.box h4 {
+  font-size: 12px;
+}
+.box .img {
+  height: 160px;
+  width: 108px;
+}
+.box ul {
+  list-style-type: none;
+  padding-left: 0;
+  margin-bottom: 0;
+}
