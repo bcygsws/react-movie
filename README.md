@@ -202,3 +202,14 @@
 ### 解决
 
 -   借助 BOM 中的 location 对象，window.location 能够在组件 App 创建阶段拿到当前，手动刷新页面后保持不变的路由 hash 值。将该值跟踪 defaultSelectedKeys 中的值。defaultSelectedKeys={window.location.hash.slice(2)}。另外一种方式是，在钩子 componentWillMount 中使用 this.setState()方法，改变挂载在 state 对象上的值
+
+### 问题二-编程式重定向的好处
+
+-   重点-编程式重定向推荐使用,区别于声明式重定向在构造函数中，直接使用 this.props.history.push()比在 App.jsx 中使用\<Redirect from="" to=""\/\>这种方法的优点是，地址栏也立即变化。而在 Switch 标签中嵌入 Redirect（单标签），初次时，地址栏是不变化的。只有点击到它的子路由后，地址栏才变成"/movie/in_theaters/1"
+
+### 解决
+
+#### 使用编程式重定向替代声明式，具体做法是在要重定向的那个组件的构造函数，添加 props.history.push(重定向路径)
+
+-   写法 1：联想 this.state 私有数据，this.props.history.push('/movie/in_theaters/1');
+-   写法 2：props 是在构造函数中的参数，this 可以省略
