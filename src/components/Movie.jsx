@@ -1,7 +1,8 @@
 import React from 'react';
 import { Layout, Menu } from 'antd';
-import { Link, Route } from 'react-router-dom';
+import { Link, Route, Switch } from 'react-router-dom';
 import SubMovie from './SubMovie.jsx';
+import Detail from './Detail.jsx';
 const { Content, Sider } = Layout;
 // 导入电影展示的内容页面
 export default class Movie extends React.Component {
@@ -39,16 +40,22 @@ export default class Movie extends React.Component {
 				<Layout style={{ paddingLeft: '1px' }}>
 					<Content
 						style={{
-							background: '#fff',
 							padding: 12,
-							margin: 0,
-							height: '100%'
+							margin: 0
 						}}
 					>
-						<Route
-							path="/movie/:type/:page"
-							component={SubMovie}
-						></Route>
+						<Switch>
+							<Route
+								path="/movie/:type/:page"
+								component={SubMovie}
+								exact
+							></Route>
+							<Route
+								path="/details/:id"
+								component={Detail}
+								exact
+							></Route>
+						</Switch>
 					</Content>
 				</Layout>
 			</Layout>

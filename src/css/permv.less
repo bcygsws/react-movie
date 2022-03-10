@@ -12,6 +12,9 @@
 	margin: 6px 3px;
 	align-items: center;
 	cursor: pointer;
+	/* transition过渡，依次写：过渡属性，过渡时间，过渡函数，过渡延时时间 */
+	/* .box .box:hover要配合使用，来设置动画 */
+	transition: all 0.3s ease;
 	h2 {
 		font-size: 16px;
 	}
@@ -24,14 +27,23 @@
 		/* 文本溢出显示省略号，需要配合white-space和overflow两个属性才起作用 */
 		text-overflow: ellipsis;
 		align-self: flex-start;
+		> span {
+			font-size: 14px;
+		}
 	}
 	.img {
 		height: 160px;
 		width: 108px;
+		margin-bottom: 0.5em;
 	}
 	ul {
 		list-style-type: none;
 		padding-left: 0;
 		margin-bottom: 0;
+	}
+	/* box动画,鼠标经过动画 */
+	&:hover {
+		transform: rotate(2deg) scale(1.03);
+		opacity: 0.7;
 	}
 }

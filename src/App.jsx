@@ -10,6 +10,8 @@ import Home from './components/Home.jsx';
 // const About = loadable(() => import('./components/About.jsx'));
 import Movie from './components/Movie.jsx';
 import About from './components/About.jsx';
+// 404页面中，不指定路由地址，只指定一个component属性，来显示匹配不到其他路由返回的内容
+import NotFind from './components/NotFind.jsx';
 // 引入DatePicker依赖的样式,在App.jsx文件中引入，安装并配置插件babel-plugin-import按需导入antd组件库
 // import 'antd/dist/antd.css';
 import { Layout, Menu } from 'antd';
@@ -65,24 +67,29 @@ export default class App extends React.Component {
 								}}
 							>
 								<Switch>
-									<Route
-										path="/home"
-										component={Home}
-									></Route>
-									<Route
-										path="/movie"
-										component={Movie}
-									></Route>
-									<Route
-										path="/about"
-										component={About}
-									></Route>
-									{/* /movie直接重定向/movie/in_theaters/1 ,注意：Redirect必须放在Switch标签的最后一行*/}
-									{/* 这种方式有一个问题 */}
-									{/* <Redirect
+									<Route path="/">
+										<Redirect to="/home" />
+										<Route
+											path="/home"
+											component={Home}
+										></Route>
+										<Route
+											path="/movie"
+											component={Movie}
+										></Route>
+										<Route
+											path="/about"
+											component={About}
+										></Route>
+										{/* /movie直接重定向/movie/in_theaters/1 ,注意：Redirect必须放在Switch标签的最后一行*/}
+										{/* 这种方式有一个问题 */}
+										{/* <Redirect
 										from="/movie"
 										to="/movie/in_theaters/1"
 									/> */}
+									</Route>
+									{/* 无任何匹配跳转至404组件 */}
+									<Route path="*" component={NotFind}></Route>
 								</Switch>
 							</div>
 						</Content>
@@ -104,12 +111,10 @@ export default class App extends React.Component {
 		// bug1解决3：解决了问题。使用BOM中window.location来获取当前所在路径。每次手动刷新页面，App组件必将重新创建，重新创建就有生命
 		// 周期钩子。
 		// 或者直接将window.location.hash.slice(2)放在defaultSelectedKeys={window.location.hash.slice(2)}
+		console.log(window.location);
 		console.log(window.location.hash); // #/home
 		// string的slice方法，功能类似substring，两个索引都是前闭后开
-		console.log(window.location.hash.slice(2));
-		// this.setState({
-		// 	defaultKey: window.location.hash.slice(2)
-		// });
+		// console.log(window.location.hash.slice(2));
 	}
 }
 /**

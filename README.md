@@ -213,3 +213,15 @@
 
 -   写法 1：联想 this.state 私有数据，this.props.history.push('/movie/in_theaters/1');
 -   写法 2：props 是在构造函数中的参数，this 可以省略
+
+### 问题三-控制台弹出
+
+-   控制台报错：Can't perform a React state update on an unmounted component。组件已经销毁，但是还有未结束的异步任务，使用下列语句取消异步方法
+
+### 解决
+
+#### 解决方案：在组件销毁钩子中添加 this.setState 语句
+
+-   UNSAFE_componentWillUnmount() {
+    this.setState = () => false;
+    }
