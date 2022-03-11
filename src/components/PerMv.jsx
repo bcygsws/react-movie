@@ -7,8 +7,8 @@ import dateFormat from '../main.js';
 // 导入评价组件
 import { Rate } from 'antd';
 // 使用witchRouter获取三大对象
-import { withRouter } from 'react-router-dom';
-class PerMv extends React.Component {
+// import { withRouter } from 'react-router-dom';
+export default class PerMv extends React.Component {
 	// 整个组件所有box响应式布局，在SubMovie里设置相应样式
 	/* jsx中不能这样写图片路径，有两种方式，实现1.import URL或者2.使用require()*;.box盒子响应式布局 */
 
@@ -96,7 +96,34 @@ class PerMv extends React.Component {
 		// 编程式导航，跳转至详情页
 		/* bug3:报错:PerMv.jsx:121 Uncaught TypeError: Cannot read properties of undefined (reading 'push'),使用witchRouter把
 		props的history、match和location三大对象加进去 */
-		this.props.history.push('/details/' + this.state.id);
+		this.props.history.push('/movie/details/' + this.state.id);
 	};
 }
-export default withRouter(PerMv);
+// export default withRouter(PerMv);
+/**
+ *
+ * @ bug4：
+ * 在当前组件-PerMv中，有一个点击.box，编程式导航的操作
+ *
+ * 点击.box，导航至“详情页”，然而会报一个错误：PerMv.jsx:124 Uncaught TypeError: Cannot read properties of undefined (reading 'push')
+ * 不能读取属性push,问题出在this.props中没有history属性；因此this.props.history就是undefined，后面再调用push方法是不可能实现的
+ * 解决方案1：
+ * 1.须知PerMv是SubMovie的子组件，在SubMovie组件中循环渲染PerMv时，可以为PerMv绑定一个history属性或者直接使用属性扩散将
+ * this.props传递
+ *
+ * 	1.1 <PerMv{...item} key={index} {...this.props}></PerMv>
+ *  1.2 编程式导航中只用到history,绑定属性this.props中的history也是可以的
+ *  <PerMv{...item} key={index} history={this.props.history}></PerMv>
+ *
+ * 解决方案2：
+ * 使用withRouter插件，它来自react-router-dom这个包，和Route Link Switch等路由相关标签一样，按需导入一下即可
+ * 2.1 引入，import {withRouter} from  'react-router-dom';
+ * 2.2 在PerMv组件中，使用export default withRouter(PerMv);导出当前组件使用withRouter(PerMv)调用后的组件
+ * 
+ * 本项目中使用方案1，属性扩散的方式，传递this.props
+ *
+ *
+ *
+ *
+ *
+ */

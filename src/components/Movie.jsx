@@ -45,14 +45,18 @@ export default class Movie extends React.Component {
 						}}
 					>
 						<Switch>
+							{/* 1.在React中，可以使用Switch来设定其标签内指定的路由多选其一，可以在匹配到的组件的如：SubMovie中使用this.props.match.params来
+						获取路由参数；2.Route中加入exact表示精确匹配，前一个匹配到了，后面的路由将放弃。因为PerMv中编程式导航，去到的路由/movie/detail/id能
+						匹配到/movie/:type/:page 。竟然将其真正要匹配的Detail组件忽略，这显示是错误的。因此，需要将params参数少的Route放在上面
+						两者顺序是不能交换的*/}
 							<Route
-								path="/movie/:type/:page"
-								component={SubMovie}
+								path="/movie/details/:id"
+								component={Detail}
 								exact
 							></Route>
 							<Route
-								path="/details/:id"
-								component={Detail}
+								path="/movie/:type/:page"
+								component={SubMovie}
 								exact
 							></Route>
 						</Switch>

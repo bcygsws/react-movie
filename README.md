@@ -225,3 +225,26 @@
 -   UNSAFE_componentWillUnmount() {
     this.setState = () => false;
     }
+
+## 问题四-路由导航与 this.props 属性的关系
+
+### 场景
+
+-   在当前组件-PerMv 中，有一个点击.box，编程式导航的操作。点击.box，导航至“详情页”，然而会报一个错误：PerMv.jsx:124 Uncaught TypeError: \'Cannot read properties of undefined reading push\'
+-   原因：不能读取属性 push,问题出在 this.props 中没有 history 属性；因此 this.props.history 就是 undefined，后面再调用 push 方法是不可能实现的
+
+### 解决方案
+
+##### 方案一
+
+须知 PerMv 是 SubMovie 的子组件，在 SubMovie 组件中循环渲染 PerMv 时，可以为 PerMv 绑定一个 history 属性或者直接使用属性扩散将
+this.props 传递
+1.1 \<PerMv{...item} key={index} {...this.props}\>\<\/PerMv\>
+1.2 编程式导航中只用到 history,绑定属性 this.props 中的 history 也是可以的
+\<PerMv{...item} key={index} history={this.props.history}\>\<\/PerMv\>
+
+##### 方案二
+
+使用 withRouter 插件，它来自 react-router-dom 这个包，和 Route Link Switch 等路由相关标签一样，按需导入一下即可
+2.1 引入，import {withRouter} from \'react-router-dom\';
+2.2 在 PerMv 组件中，使用 export default withRouter(PerMv);导出当前组件使用 withRouter(PerMv)调用后的组件

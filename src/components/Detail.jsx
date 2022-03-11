@@ -4,35 +4,37 @@
  *
  */
 import React from 'react';
+// import fetchJsonp from 'fetch-jsonp';
 // import { withRouter } from 'react-router-dom';
 export default class Detail extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			params: props.match.params
+			// 点击的那个电影信息块的唯一id
+			id: props.match.params.id
 		};
 	}
 	render() {
-		return <div>{this.state.params}</div>;
-	}
-	// 点击box，根据当前盒子的doubanId进入详情页
-	UNSAFE_componentWillReceiveProps(nextProps) {
-		console.log(nextProps);
-    this.setState({
-      params: nextProps.match.params
-    })
+		return <div>{this.state.id}</div>;
 	}
 	UNSAFE_componentWillMount() {
-		console.log(this.props.match.params);
-		console.log(window.location);
-		/**
-		 *
-		 * @ 使用Context属性
-		 * 从App.jsx到Detail.jsx传递这个id
-		 *
-		 *
-		 *
-		 */
+		console.log(this.props);
+		// 根据id请求数据
+		// 1.可用的数据接口，使用  https://movie.querydata.org/api?id=1302425,从路由属性中获取这个参数，已经绑定到当前组件的state
+		// 2.使用fetch请求数据,有时候报错如下：可以转换思路，改用fetch-jsonp尝试
+		/* 
+		ccess to fetch at 'https://movie.querydata.org/api?id={this.state.id}' from origin 'http://localhost:3002' 
+		has been blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present on the requested resource.
+		 If an opaque response serves your needs, set the request's mode to 'no-cors' to fetch the resource with CORS
+		  disabled.
+		*/
+		fetch(`https://movie.querydata.org/api?id=${this.state.id}`)
+			.then((response) => {
+				return response.json();
+			})
+			.then((res) => {
+				console.log(res);
+			});
 	}
 	// 封装根据id请求详情数据的方法
 	// 	getDetail = () => {

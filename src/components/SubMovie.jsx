@@ -69,9 +69,9 @@ export default class SubMovie extends React.Component {
 			return (
 				<div>
 					<div className={Sub.parent}>
-						{/* 循环渲染每个电影信息展示块 */}
+						{/* 循环渲染每个电影信息展示块,要将history作为属性绑定给PerMv，那么PerMv就有了history属性 */}
 						{this.state.list.map((item, index) => {
-							return <PerMv {...item} key={index}></PerMv>;
+							return <PerMv {...item} key={index} {...this.props}></PerMv>;
 						})}
 					</div>
 					{/* 分页,注意：this.state.curPage只接收number类型，所有改变curPage的地方，都应该保证其数据类型还是number*/}
@@ -226,6 +226,7 @@ export default class SubMovie extends React.Component {
 		// vue中 this.$route.params获取带参数的路由的参数值
 		// React中使用this.props.match.params获取参数数据,关联到当前组件SubMovie的state私有数据上
 		console.log(this.state.type + '--------------' + this.state.curPage);
+		console.log(this.props);
 		// a.模拟数据加载的过程，数据请求完成后，isLoading，通过state来改名，必定触发页面更新，页面更新，必然重新渲染render函数，
 		// 进而调用this.animationHandle()
 		//b.假设2s后数据回来
