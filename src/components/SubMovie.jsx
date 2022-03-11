@@ -32,8 +32,10 @@ export default class SubMovie extends React.Component {
 		return (
 			<div className={Sub.sub_movie}>
 				{/* <h3>这是电影显示页面</h3> */}
-				{this.state.type}------
-				{this.state.curPage}
+				<span>
+					{this.state.type}------
+					{this.state.curPage}
+				</span>
 				{this.animationHandle()}
 			</div>
 		);
@@ -71,7 +73,13 @@ export default class SubMovie extends React.Component {
 					<div className={Sub.parent}>
 						{/* 循环渲染每个电影信息展示块,要将history作为属性绑定给PerMv，那么PerMv就有了history属性 */}
 						{this.state.list.map((item, index) => {
-							return <PerMv {...item} key={index} {...this.props}></PerMv>;
+							return (
+								<PerMv
+									{...item}
+									key={index}
+									{...this.props}
+								></PerMv>
+							);
 						})}
 					</div>
 					{/* 分页,注意：this.state.curPage只接收number类型，所有改变curPage的地方，都应该保证其数据类型还是number*/}

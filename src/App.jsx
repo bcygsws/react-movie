@@ -11,7 +11,7 @@ import Home from './components/Home.jsx';
 import Movie from './components/Movie.jsx';
 import About from './components/About.jsx';
 // 404页面中，不指定路由地址，只指定一个component属性，来显示匹配不到其他路由返回的内容
-import NotFind from './components/NotFind.jsx';
+// import NotFind from './components/NotFind.jsx';
 // 引入DatePicker依赖的样式,在App.jsx文件中引入，安装并配置插件babel-plugin-import按需导入antd组件库
 // import 'antd/dist/antd.css';
 import { Layout, Menu } from 'antd';
@@ -44,14 +44,16 @@ export default class App extends React.Component {
 						<Menu
 							theme="dark"
 							mode="horizontal"
-							defaultSelectedKeys={window.location.hash.slice(2)}
+							defaultSelectedKeys={[
+								window.location.hash.split('/')[1]
+							]}
 							style={{ lineHeight: '64px' }}
 						>
 							<Menu.Item key="home">
 								<Link to="/home">首页</Link>
 							</Menu.Item>
 							<Menu.Item key="movie">
-								<Link to="/movie">电影</Link>
+								<Link to="/movie/in_theaters/1">电影</Link>
 							</Menu.Item>
 							<Menu.Item key="about">
 								<Link to="/about">关于</Link>
@@ -67,30 +69,34 @@ export default class App extends React.Component {
 								}}
 							>
 								<Switch>
-									<Route path="/">
-										<Redirect to="/home" />
-										<Route
-											path="/home"
-											component={Home}
-										></Route>
-										<Route
-											path="/movie"
-											component={Movie}
-										></Route>
-										<Route
-											path="/about"
-											component={About}
-										></Route>
-										{/* /movie直接重定向/movie/in_theaters/1 ,注意：Redirect必须放在Switch标签的最后一行*/}
-										{/* 这种方式有一个问题 */}
-										{/* <Redirect
+									<Route
+										path="/home"
+										component={Home}
+									></Route>
+									{/* 省去做/movie自动跳转到/movie/in_theaters/1的过程，Link的to属性：直接设定为/movie/in_theaters/1。但是在
+								Route中还是要写/movie,模糊模式下，/movie是可以匹配所有的/movie系列路由,/movie是可以匹配到/movie/in_theaters/1的，
+							此处path不能写成/movie/in_theaters/1
+							结论：如果某个路由还有有多个子路由，那么在Route中path不能写成子路由其中一个，而应该
+							尽可能模糊，让它能匹配到所有的子路由 */}
+									<Route
+										path="/movie"
+										component={Movie}
+									></Route>
+									<Route
+										path="/about"
+										component={About}
+									></Route>
+									{/* /movie直接重定向/movie/in_theaters/1 ,注意：Redirect必须放在Switch标签的最后一行*/}
+									{/* 这种方式有一个问题 */}
+									{/* <Redirect
 										from="/movie"
 										to="/movie/in_theaters/1"
 									/> */}
-									</Route>
-									{/* 无任何匹配跳转至404组件 */}
-									<Route path="*" component={NotFind}></Route>
+									<Redirect from="/" to="/home" exact />
 								</Switch>
+								{/* <Redirect from="/" to="/home" /> */}
+								{/* 无任何匹配跳转至404组件 */}
+								{/* 	<Route path="*" component={NotFind}></Route> */}
 							</div>
 						</Content>
 					</Layout>
@@ -115,6 +121,22 @@ export default class App extends React.Component {
 		console.log(window.location.hash); // #/home
 		// string的slice方法，功能类似substring，两个索引都是前闭后开
 		// console.log(window.location.hash.slice(2));
+		/**
+		 *
+		 * @ 问题?为什么App.jsx首次通过window.location.hash能够打印/home?而切换至电影和关于却无法打印相关路由
+		 * 1.页面路由从/重定向到/home,此时也是App.jsx组件首次创建，App组件经历创建阶段，当前钩子componentWillMount自然会执行，于是
+		 * window.location.hash按照预期打印出来
+		 * 2.选择路由按钮，切换【电影】和【关于】的路由，此时会切换至App的子组件Movie或者About组件，但是App组件并没有重新渲染，因此
+		 * componentWillMount没有执行，所有正常切换至其他路由不会在当前钩子中打印出hash值
+		 * 3.比如：切换至movie的路由，/movie/in_theaters/1,手动刷新一次页面，此时App组件就开始重新基于当前路由(/movie/in_theaters/1)开始
+		 * 渲染新的App组件，当前生命周期钩子componentWillMount中能打印出此时的路由
+		 * 4.第二级别的路由也是同样地情况，手动刷新/movie/in_theaters/1和/movie/coming_soon/1、/movie/top250/1都会基于当前地址重新创建
+		 * Movie组件。也是同样的结果，最初Movie.jsx中componentWillMount只能拿到最开始这个路由，正常切换当前钩子不会打印即时的路由。手动刷新
+		 * 触发Movie组件重新创建了，才会打印即时的路由
+		 *
+		 * 总之，深入理解虚拟dom的diff算法，总会智能地计算出更新dom的最小代价。手动刷新将触发当前组件路由Route所在组件从0开始的创建
+		 *
+		 */
 	}
 }
 /**

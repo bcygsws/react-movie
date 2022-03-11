@@ -10,7 +10,10 @@
 	max-height: 500px;
 	padding: 8px;
 	margin: 6px 3px;
+	/* 控制的是纵向排列的元素在主轴方向(水平方向)的排列方式，align-content是对align-items的补充，参考：https://blog.csdn.net/zSY_snake/article/details/80200089 */
 	align-items: center;
+	/* 设置纵向排列的，图片、h2、h4等元素，两端对齐 */
+	align-content: space-between;
 	cursor: pointer;
 	/* transition过渡，依次写：过渡属性，过渡时间，过渡函数，过渡延时时间 */
 	/* .box .box:hover要配合使用，来设置动画 */

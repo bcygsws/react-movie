@@ -15,24 +15,27 @@ export default class Movie extends React.Component {
 		// 写法1：联想this.state
 		// this.props.history.push('/movie/in_theaters/1');
 		// 写法2：props是在构造函数中的参数，this可以省略
-		props.history.push('/movie/in_theaters/1');
+		// props.history.push('/movie/in_theaters/1');
 	}
 	render() {
 		return (
 			<Layout>
 				<Sider width={200} style={{ background: '#fff' }}>
+					{/* window.location.hash 结果示例：#/movie/in_theaters/1 */}
 					<Menu
 						mode="inline"
-						defaultSelectedKeys={window.location.hash.slice(2)}
+						defaultSelectedKeys={[
+							window.location.hash.split('/')[2]
+						]}
 						style={{ height: '100%', borderRight: 0 }}
 					>
-						<Menu.Item key="movie/in_theaters/1">
+						<Menu.Item key="in_theaters">
 							<Link to="/movie/in_theaters/1">正在热映</Link>
 						</Menu.Item>
-						<Menu.Item key="movie/coming_soon/1">
+						<Menu.Item key="coming_soon">
 							<Link to="/movie/coming_soon/1">即将上映</Link>
 						</Menu.Item>
-						<Menu.Item key="movie/top250/1">
+						<Menu.Item key="top250">
 							<Link to="/movie/top250/1">Top250</Link>
 						</Menu.Item>
 					</Menu>
@@ -68,4 +71,8 @@ export default class Movie extends React.Component {
 	UNSAFE_componentWillMount() {
 		console.log(window.location.hash);
 	}
+	// 最开始的movie/in_theaters/1拿不到，然后切换其他开始拿到
+	// UNSAFE_componentWillUpdate() {
+	// 	console.log(window.location.hash);
+	// }
 }

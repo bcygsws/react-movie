@@ -1,0 +1,39 @@
+.box {
+	height: 100%;
+	.parent {
+		/* background-color: pink; */
+		height: 100%;
+		display: flex;
+		/* 右边定宽，左边响应式伸缩 */
+		.content {
+			flex: 1;
+			.son {
+				height: 100%;
+				background-color: green;
+				padding: 20px;
+				display: flex;
+				flex-flow: column wrap;
+				/* 去掉左侧实心圆点 */
+				list-style: none;
+				.pub {
+					margin-bottom: 15px;
+				}
+				.mv_name {
+					font: normal 400 20px 'Arial';
+				}
+			}
+		}
+		.dd {
+			max-width: 350px;
+			/* background-color: red; */
+			margin: 0;
+			padding: 20px;
+			.p {
+				text-align: center;
+				font-size: 18px;
+				font-weight: 700;
+				margin-top: 1em;
+			}
+		}
+	}
+}

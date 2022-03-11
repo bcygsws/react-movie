@@ -248,3 +248,24 @@ this.props 传递
 使用 withRouter 插件，它来自 react-router-dom 这个包，和 Route Link Switch 等路由相关标签一样，按需导入一下即可
 2.1 引入，import {withRouter} from \'react-router-dom\';
 2.2 在 PerMv 组件中，使用 export default withRouter(PerMv);导出当前组件使用 withRouter(PerMv)调用后的组件
+
+## 问题 5-Link 和 Route 中 to 和 path 属性的设定问题
+
+### 场景和解决方案
+
+-   电影\/movie 路径下，有三个子路由/movie/in_theaters/id,/movie/coming_soon/id，/movie/top250/id。为实现切换到一级路由【电影】时，立即选中的是二级子路由的第 1 个(即：/movie/in_theaters/id)。只需要将 Link 中 to="/movie"改成 to="/mo vie/in_theaters/1"即可，to 的含义：是浏览器地址栏的去向，而组件和路由匹配，要达到的目标是尽可能的复用，以减少代码的复杂度。而 Route 在 React 中有两重功能：一、占位符，类似 vue 中的 router-view。而匹配规则：当/movie 下要设定多个子路由时，该 Route 中的 path 应该能匹配到一级路由/movie 和其他三个二级子路由，里面的 path 正确写法为：\<Route path="/movie" component={Movie}\>\<\/\>
+-   体会 React 中 Link 中 to 和 Route 中 path 的区别
+
+## 问题 6-手动刷新触发其路由对应的组件的上层组件全部从 0 开始创建
+
+### 为什么 App.jsx 首次通过 window.location.hash 能够打印/home?而切换至电影和关于却无法打印相关路由
+
+1. 页面路由从/重定向到/home,此时也是 App.jsx 组件首次创建，App 组件经历创建阶段，当前钩子 componentWillMount 自然会执行，于是
+   window.location.hash 按照预期打印出来
+
+2. 选择路由按钮，切换【电影】和【关于】的路由，此时会切换至 App 的子组件 Movie 或者 About 组件，但是 App 组件并没有重新渲染，因此
+   componentWillMount 没有执行，所有正常切换至其他路由不会在当前钩子中打印出 hash 值
+
+3. 比如：切换至 movie 的路由，/movie/in_theaters/1,手动刷新一次页面，此时 App 组件就开始重新基于当前路由(/movie/in_theaters/1)开始渲染新的 App 组件，当前生命周期钩子 componentWillMount 中能打印出此时的路由
+
+4. 第二级别的路由也是同样地情况，手动刷新/movie/in_theaters/1 和/movie/coming_soon/1、/movie/top250/1 都会基于当前地址重新创建 Movie 组件。也是同样的结果，最初 Movie.jsx 中 componentWillMount 只能拿到最开始这个路由，正常切换当前钩子不会打印即时的路 由。手动刷新触发 Movie 组件重新创建了，才会打印即时的路由;总之，深入理解虚拟 dom 的 diff 算法，总会智能地计算出更新 dom 的最小代价。手动刷新将触发所有组件路由 Route 所在组件从 0 开始的创建；观察手动刷新以后，从 App 开始的各级别组件，window.location.hash 都能拿到即时值
