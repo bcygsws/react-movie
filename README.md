@@ -194,7 +194,7 @@
 
 ## 十、项目问题汇总
 
-### 问题一
+### 问题 1
 
 -   ant 框架，提供的 Layout 布局中，点击不同的路由可以实现切换，选中的路由背景为深蓝色的。但是，当手动刷新一下页面后，路由地址栏没有发生变化，但是选中的路由深蓝色背景消失，而【首页】上显示深蓝色背景，切换到\/movie 和\/about 都出现这个问题。
 -   原因是：确定哪个路由选中，是有 Menu 标签中 defaultSelectedKeys="['1']"控制的。手动刷新页面后，App 组件重新创建，Menu.Item 中的 key 值销毁，无法和 defaultSelectedKeys 建立关联
@@ -203,7 +203,7 @@
 
 -   借助 BOM 中的 location 对象，window.location 能够在组件 App 创建阶段拿到当前，手动刷新页面后保持不变的路由 hash 值。将该值跟踪 defaultSelectedKeys 中的值。defaultSelectedKeys={window.location.hash.slice(2)}。另外一种方式是，在钩子 componentWillMount 中使用 this.setState()方法，改变挂载在 state 对象上的值
 
-### 问题二-编程式重定向的好处
+### 问题 2-编程式重定向的好处
 
 -   重点-编程式重定向推荐使用,区别于声明式重定向在构造函数中，直接使用 this.props.history.push()比在 App.jsx 中使用\<Redirect from="" to=""\/\>这种方法的优点是，地址栏也立即变化。而在 Switch 标签中嵌入 Redirect（单标签），初次时，地址栏是不变化的。只有点击到它的子路由后，地址栏才变成"/movie/in_theaters/1"
 
@@ -214,7 +214,7 @@
 -   写法 1：联想 this.state 私有数据，this.props.history.push('/movie/in_theaters/1');
 -   写法 2：props 是在构造函数中的参数，this 可以省略
 
-### 问题三-控制台弹出
+### 问题 3-控制台弹出
 
 -   控制台报错：Can't perform a React state update on an unmounted component。组件已经销毁，但是还有未结束的异步任务，使用下列语句取消异步方法
 
@@ -226,7 +226,7 @@
     this.setState = () => false;
     }
 
-## 问题四-路由导航与 this.props 属性的关系
+## 问题 4-路由导航与 this.props 属性的关系
 
 ### 场景
 
@@ -269,3 +269,24 @@ this.props 传递
 3. 比如：切换至 movie 的路由，/movie/in_theaters/1,手动刷新一次页面，此时 App 组件就开始重新基于当前路由(/movie/in_theaters/1)开始渲染新的 App 组件，当前生命周期钩子 componentWillMount 中能打印出此时的路由
 
 4. 第二级别的路由也是同样地情况，手动刷新/movie/in_theaters/1 和/movie/coming_soon/1、/movie/top250/1 都会基于当前地址重新创建 Movie 组件。也是同样的结果，最初 Movie.jsx 中 componentWillMount 只能拿到最开始这个路由，正常切换当前钩子不会打印即时的路 由。手动刷新触发 Movie 组件重新创建了，才会打印即时的路由;总之，深入理解虚拟 dom 的 diff 算法，总会智能地计算出更新 dom 的最小代价。手动刷新将触发所有组件路由 Route 所在组件从 0 开始的创建；观察手动刷新以后，从 App 开始的各级别组件，window.location.hash 都能拿到即时值
+
+## 问题 7
+
+### 场景-请求数据接口的时机
+
+#### /movie 三个子路由切换时
+
+-   4.1 首先，在 componentWillMount 中调用一次 fetch 异步请求数据，完成 SubMovie 界面的初始化渲染
+-   4.2 其次，使用 compontWillReceiveProps(nextProps)中，this.setState 重置 state 中相关数据，然后在回调中请求后台数据，基于新数据更新页面
+-   伪代码
+-   componentWillReceiveProps(nextProps){
+-   this.setState({
+-   // 基于 nextProps 更改请求参数
+-   },()=>{
+-   // 回调中，向后台发起请求
+-   })
+-   }
+
+#### 从电影列表中，点击某一部电影显示块，编程式导航，进入 Detail 组件
+
+-   分析：这里匹配的路由从/movie/:type/:page 到/movie/detail/:id,对应的组件从 SubMovie 变成了 Detail，无论是任何一部电影，【进入详情】这一个过程，始终伴随着新组件的从零开始创建，因此在 componentWillMount 中请求后台数据，这是一个异步过程，执行到异步任务时，先把异步任务推送到队列中，继续向下执行，完成【加载中……】动画的渲染。而后，后台数据也请求过来了，this.setState({isLoading:false,detail:res})来触发虚拟 dom 的重新更新；然而/movie 的三个子路由，则匹配到的是同一个 SubMovie,组件切换时，通过 componentWillReceiveProps(nextProps)的函数体中使用 this.setState 重新更新虚拟 dom

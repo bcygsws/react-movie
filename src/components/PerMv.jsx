@@ -56,13 +56,16 @@ export default class PerMv extends React.Component {
 				<h4>语言：{this.props.data[0].language}</h4>
 				<h4 className={Per.update}>
 					<span> 评分：</span>
-					<Rate allowHalf defaultValue={this.rate()} disabled />
+					<Rate
+						allowHalf
+						defaultValue={this.rate(this.props.imdbRating)}
+						disabled
+					/>
 				</h4>
 			</div>
 		);
 	}
-	rate = () => {
-		const rating = parseFloat(this.props.imdbRating);
+	rate = (rating) => {
 		let val;
 		// case和switch表达式类型一致，都是布尔型
 		switch (true) {
@@ -119,7 +122,7 @@ export default class PerMv extends React.Component {
  * 使用withRouter插件，它来自react-router-dom这个包，和Route Link Switch等路由相关标签一样，按需导入一下即可
  * 2.1 引入，import {withRouter} from  'react-router-dom';
  * 2.2 在PerMv组件中，使用export default withRouter(PerMv);导出当前组件使用withRouter(PerMv)调用后的组件
- * 
+ *
  * 本项目中使用方案1，属性扩散的方式，传递this.props
  *
  *

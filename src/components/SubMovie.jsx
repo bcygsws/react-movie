@@ -147,7 +147,7 @@ export default class SubMovie extends React.Component {
 				this.state.list = data;
 				// data是一个数组，如果长度为0，就是空数组data.length===0
 				if (data.length) {
-					// 从动画切换到电影列表，肯定需要更新页面
+					// 从动画切换到电影列表，触发页面更新
 					this.setState({
 						isLoading: false
 					});
@@ -233,6 +233,8 @@ export default class SubMovie extends React.Component {
 		// 需求：在App.jsx中配置的带参数的路由/movie/top250/10，参数要获取到，根据这些参数，去后台请求数据，这在项目中非常普遍
 		// vue中 this.$route.params获取带参数的路由的参数值
 		// React中使用this.props.match.params获取参数数据,关联到当前组件SubMovie的state私有数据上
+		console.log('测试state里面的数据改变了，我还二次执行吗？');
+		// 路由切换后，这个钩子就不会执行了。会进行更新阶段的重新渲染页面
 		console.log(this.state.type + '--------------' + this.state.curPage);
 		console.log(this.props);
 		// a.模拟数据加载的过程，数据请求完成后，isLoading，通过state来改名，必定触发页面更新，页面更新，必然重新渲染render函数，

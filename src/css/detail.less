@@ -9,17 +9,24 @@
 			flex: 1;
 			.son {
 				height: 100%;
-				background-color: green;
 				padding: 20px;
 				display: flex;
-				flex-flow: column wrap;
+				flex-flow: column no-wrap;
+				min-width: 300px;
 				/* 去掉左侧实心圆点 */
 				list-style: none;
 				.pub {
-					margin-bottom: 15px;
+					margin-bottom: 10px;
 				}
 				.mv_name {
 					font: normal 400 20px 'Arial';
+				}
+				.rating {
+					.up {
+						font: italic 700 18px 'Arial';
+						margin: 0 5px;
+						color: #fadb14;
+					}
 				}
 			}
 		}
