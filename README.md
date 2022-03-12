@@ -290,3 +290,29 @@ this.props 传递
 #### 从电影列表中，点击某一部电影显示块，编程式导航，进入 Detail 组件
 
 -   分析：这里匹配的路由从/movie/:type/:page 到/movie/detail/:id,对应的组件从 SubMovie 变成了 Detail，无论是任何一部电影，【进入详情】这一个过程，始终伴随着新组件的从零开始创建，因此在 componentWillMount 中请求后台数据，这是一个异步过程，执行到异步任务时，先把异步任务推送到队列中，继续向下执行，完成【加载中……】动画的渲染。而后，后台数据也请求过来了，this.setState({isLoading:false,detail:res})来触发虚拟 dom 的重新更新；然而/movie 的三个子路由，则匹配到的是同一个 SubMovie,组件切换时，通过 componentWillReceiveProps(nextProps)的函数体中使用 this.setState 重新更新虚拟 dom
+
+## 问题 8
+
+### 和属性有关的方法
+
+#### Object.keys(obj)
+
+-   含义：将 obj 对象自身的可枚举属性的一个或多个键，以数组的形式返回
+
+#### Object.getOwnPropertyNames(obj)
+
+-   含义：将 obj 对象自身的属性包括可枚举和不可枚举属性的键，以数组的形式返回
+
+#### obj.hasOwnProperty(key)
+
+-   含义：判断对象 obj 上是否有 key 属性(只判断有无，不管他是否可枚举)，不会检查原型上是否有 key 属性；
+    返回值是布尔类型。有返回 true;无,返回 false
+
+#### obj.propertyIsEnumerable(key)
+
+-   含义：判断 obj 上的 key 属性是否可枚举，和 hasOwnProperty 一样，不会检查原型上的属性。即时，原型上的某个属性是 key 枚举，通过这个方法验证，也会返回 false
+
+#### for---in 循环
+
+-   含义：for---in 循环可以遍历数组上的对象自身和其原型上的所有【可枚举属性】
+-   注意：上述五个知识点中，只有 for---in 循环涉及到了原型上的属性，可以通过 obj.hasOwnProperty(key)这个方法过滤掉原型上的属性
