@@ -251,7 +251,7 @@ module.exports = {
 			{
 				test: /\.(html|htm)$/i,
 				// use: 'html-withimg-loader'
-				// html-loader解析图片，依据的是项目中原来index.html<img src="./images/bale.jpg"/>的位置；而html-withimg-loader则依据的是托管在内存中的根路径
+				// 【推荐使用】html-loader解析图片，依据的是项目中原来index.html<img src="./images/bale.jpg"/>的位置；而html-withimg-loader则依据的是托管在内存中的根路径
 				use: {
 					loader: 'html-loader'
 				}
@@ -295,33 +295,34 @@ module.exports = {
 							// publicPath: '../images', // 必须有，否则打包时，抽离的样式中url(/images)图片变成了和css同级了
 							// child.jpg图片大写为213,721
 							// limit: 214000, // 图片大小小于limit,图片转化为base64格式
-							limit: 120 * 1024, // 图片的大小1个为123k,一个为208k。取两个最小值。limit小于最小值，才会打包成图片需要安装file-loader，limit<图片实际值，才会显示name格式的名字
+							// logo图片大小为9.55k
+							limit: 9 * 1024, // 图片的大小1个为123k,一个为208k。取两个最小值。limit小于最小值，才会打包成图片需要安装file-loader，limit<图片实际值，才会显示name格式的名字
 							name: '[name]-[hash:8].[ext]'
 						}
+					},
+					{
+						loader: 'image-webpack-loader',
+						options: {
+							mozjpeg: {
+								progressive: true
+							},
+							// optipng.enabled: false will disable optipng
+							optipng: {
+								enabled: false
+							},
+							pngquant: {
+								quality: [0.65, 0.9],
+								speed: 4
+							},
+							gifsicle: {
+								interlaced: false
+							},
+							// the webp option will enable WEBP
+							webp: {
+								quality: 75
+							}
+						}
 					}
-					// 		{
-					// 			loader: 'image-webpack-loader',
-					// 			options: {
-					// 				mozjpeg: {
-					// 					progressive: true
-					// 				},
-					// 				// optipng.enabled: false will disable optipng
-					// 				optipng: {
-					// 					enabled: false
-					// 				},
-					// 				pngquant: {
-					// 					quality: [0.65, 0.9],
-					// 					speed: 4
-					// 				},
-					// 				gifsicle: {
-					// 					interlaced: false
-					// 				},
-					// 				// the webp option will enable WEBP
-					// 				webp: {
-					// 					quality: 75
-					// 				}
-					// 			}
-					// 		}
 				]
 			},
 			// 解析js或者jsx文件的新语法
