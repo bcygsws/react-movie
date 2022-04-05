@@ -1,3 +1,9 @@
+/**
+ * @ 电影列表组件懒加载，生产环境中实现
+ * 暂未作处理
+ *
+ *
+ */
 import React from 'react';
 import Loadable from 'react-loadable';
 

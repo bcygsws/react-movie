@@ -23,7 +23,7 @@ module.exports = {
 			'react-dom',
 			'react-router-dom',
 			'react-loadable',
-			'prop-types'
+			'prop-types',
 		],
 		antd1: 'antd'
 	},
@@ -74,7 +74,10 @@ module.exports = {
 		// gzip压缩，开发环境中关闭
 		// 还需要在nginx中配置gzip压缩相关的内容，参考：https://ly1024.blog.csdn.net/article/details/109580024?spm=1001.2101.3001.6650.12&utm_medium=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromBaidu%7ERate-12.pc_relevant_default&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromBaidu%7ERate-12.pc_relevant_default&utm_relevant_index=17
 		// new CompressionWebpackPlugin({
-		// 	filename: '[path].gz[query]', // 目标资源名称。[file] 会被替换成原资源。[path] 会被替换成原资源路径，[query] 替换成原查询字符串
+		//	// filename: '[path].gz[query]', // 目标资源名称。[file] 会被替换成原资源。[path] 会被替换成原资源路径，[query] 替换成原查询字符串
+		// 总结：解决命名冲突，不再是所有文件公用一个.gz文件，而是为每个满足条件(具体说threshold中的设定值，大于1M的才会gzip压缩)
+		// 的打包js文件，都生成一个同名的.gz文件
+		// filename: '[path][base].gz', // 目标资源名称。[file] 会被替换成原资源。[path] 会被替换成原资源路径，[query] 替换成原查询字符串
 		// 	algorithm: 'gzip', // 算法
 		// 	test: new RegExp('\\.(js|css)$'), // 压缩 js 与 css
 		// 	threshold: 10240, // 只处理比这个值大的资源。按字节计算
@@ -86,8 +89,8 @@ module.exports = {
 		// minimize: true, // webpack4默认是开启压缩的，可以不写
 		splitChunks: {
 			chunks: 'all', // async表示抽取异步模块，all表示对所有模块生效，initial表示对同步模块生效
-			minSize: 0, // 大于0字节
 			automaticNameDelimiter: '~',
+			minSize: 30000, // js文件之和大于30000，就会拆分。之和小于30000，这些文件会被打包成一个文件
 			cacheGroups: {
 				// 单独提取JS文件引入html
 				vendors: {
@@ -113,7 +116,6 @@ module.exports = {
 				antd1: {
 					test: (module) => /antd/.test(module.context),
 					// test: /^antd$/,
-					chunks: 'initial',
 					minChunks: 1,
 					name: 'antd1',
 					// enforce: true, // 强制
@@ -121,14 +123,14 @@ module.exports = {
 				},
 				'async-chunks': {
 					chunks: 'async',
-					minChunks: 1,
+					minChunks: 1, // minChunks最少引用的次数，是1次
 					name: 'async-chunks',
 					priority: 80
 				},
 				// 其他公共包
 				commons: {
 					chunks: 'all',
-					minChunks: 2,
+					minChunks: 1,
 					name: 'commons',
 					priority: 70
 				}
@@ -143,7 +145,7 @@ module.exports = {
 		minimizer: [
 			new UglifyJS({
 				include: /\.js$/,
-				parallel: true, // 采用多线程并发
+				parallel: true, // 采用多线程并发,[ˈpærəlel]
 				uglifyOptions: {
 					output: {
 						comments: false // 删除代码中的注释
@@ -152,7 +154,7 @@ module.exports = {
 			})
 		]
 	},
-	// externals中配置了【从输出的bundle.js中排除依赖】的方法，开发环境中关闭，用安装到本地的包
+	// externals中配置了【从输出的bundle.js中排除依赖】的方法
 	// externals: {
 	// 	react: 'React',
 	// 	'react-dom': 'ReactDOM',
@@ -211,7 +213,6 @@ module.exports = {
 					{
 						loader: MiniCssExtractPlugin.loader,
 						options: {
-							// css-loader中url解析必须为true，解析后图片路径降低了层级，需要使用style-loader下的options选项中提高一个层级
 							publicPath: '../'
 						}
 					},
@@ -258,32 +259,32 @@ module.exports = {
 					loader: 'html-loader'
 				}
 			},
-			// // url-loader和file-loader是什么关系呢？简答地说，url-loader封装了file-loader。url-loader不依赖于
-			// // file-loader，即使用url-loader时，只需要安装url-loader即可，不需要安装file-loader，因为url-loader
-			// // 内置了file-loader。通过上面的介绍，我们可以看到，url-loader工作分两种情况：1.文件大小小于limit参数，
-			// // url-loader将会把文件转为DataURL；2.文件大小大于limit，url-loader会调用file-loader进行处理，参数也会
-			// // 直接传给file-loader。因此我们只需要安装url-loader即可
-			// // 处理css中的url图片，webpack解析css路径中的url图片。图片压缩和浏览器加前缀还要用到file-loader，因此file-loader
-			// // 最好也安装一下
-			// /**
-			//  *
-			//  * bug:html中的图片和样式文件url路径中的图片的路径纠缠：
-			//  * 注意：html-loader中处理的是打包前路径的相对关系
-			//  * a.因此index.html中图片中src="./images/bale.jpg"。打包后，图片仍然放在了images文件夹中了，路径相对关系不变。
-			//  * 由于html-loader处理了html中的图片仍然要走url-loader加载器，那么url-loader之后的options选项中就不能配置
-			//  * publicPath:'../images'(如果项目中仅仅css中有引入图片，完全可以这么做)或者../来调和打包后图片的路径
-			//  * b.如果是html和css中都存在图片,html中图片路径相对位置不变，而且处理html中图片的html-loader处理完成后，还要
-			//  * 交给url-loader处理，比如outPath:'./images',指示两种图片都打包在dist/images文件夹下。同时，limit(取两个图片大
-			//  * 小的最小值both_min，limit<最小值box_min,就可以实现图片都不打包成base64格式)。
-			//  * url中引入的图片路径：打包前url('../images/child.jpg') ，打包后url被解析成了url('/images/child.jpg')。需要提高
-			//  * 访问级别，在rules:[],{test:/\.less$/,use:{
-			//  * 		loader:MiniCssExtractPlugin.loader,
-			//  * 		options:{
-			//  * 		      // 将被url-loader处理器降低访问层级后的图片，访问级别抬高，即解析后的/images/child.jpg变成../images/child.jpg
-			//  * 					publicPath:'../'
-			//  * 						}
-			//  * }}
-			//  */
+			// url-loader和file-loader是什么关系呢？简答地说，url-loader封装了file-loader。url-loader不依赖于
+			// file-loader，即使用url-loader时，只需要安装url-loader即可，不需要安装file-loader，因为url-loader
+			// 内置了file-loader。通过上面的介绍，我们可以看到，url-loader工作分两种情况：1.文件大小小于limit参数，
+			// url-loader将会把文件转为DataURL；2.文件大小大于limit，url-loader会调用file-loader进行处理，参数也会
+			// 直接传给file-loader。因此我们只需要安装url-loader即可
+			// 处理css中的url图片，webpack解析css路径中的url图片。图片压缩和浏览器加前缀还要用到file-loader，因此file-loader
+			// 最好也安装一下
+			/**
+			 *
+			 * bug:html中的图片和样式文件url路径中的图片的路径纠缠：
+			 * 注意：html-loader中处理的是打包前路径的相对关系
+			 * a.因此index.html中图片中src="./images/bale.jpg"。打包后，图片仍然放在了images文件夹中了，路径相对关系不变。
+			 * 由于html-loader处理了html中的图片仍然要走url-loader加载器，那么url-loader之后的options选项中就不能配置
+			 * publicPath:'../images'(如果项目中仅仅css中有引入图片，完全可以这么做)或者../来调和打包后图片的路径
+			 * b.如果是html和css中都存在图片,html中图片路径相对位置不变，而且处理html中图片的html-loader处理完成后，还要
+			 * 交给url-loader处理，比如outPath:'./images',指示两种图片都打包在dist/images文件夹下。同时，limit(取两个图片大
+			 * 小的最小值both_min，limit<最小值box_min,就可以实现图片都不打包成base64格式)。
+			 * url中引入的图片路径：打包前url('../images/child.jpg') ，打包后url被解析成了url('/images/child.jpg')。需要提高
+			 * 访问级别，在rules:[],{test:/\.less$/,use:{
+			 * 		loader:MiniCssExtractPlugin.loader,
+			 * 		options:{
+			 * 		      // 将被url-loader处理器降低访问层级后的图片，访问级别抬高，即解析后的/images/child.jpg变成../images/child.jpg
+			 * 					publicPath:'../'
+			 * 						}
+			 * }}
+			 */
 			{
 				test: /\.(jpeg|bmp|png|jpg|gif)$/i,
 				use: [
@@ -297,33 +298,33 @@ module.exports = {
 							// publicPath: '../images', // 必须有，否则打包时，抽离的样式中url(/images)图片变成了和css同级了
 							// child.jpg图片大写为213,721
 							// limit: 214000, // 图片大小小于limit,图片转化为base64格式
-							limit: 9 * 1024, // 图片的大小为9.55kb。limit小于最小值，才会打包成图片需要安装file-loader，limit<图片实际值，才会显示name格式的名字
+							limit: 120 * 1024, // 图片的大小1个为123k,一个为208k。取两个最小值。limit小于最小值，才会打包成图片需要安装file-loader，limit<图片实际值，才会显示name格式的名字
 							name: '[name]-[hash:8].[ext]'
 						}
+					},
+					{
+						loader: 'image-webpack-loader',
+						options: {
+							mozjpeg: {
+								progressive: true
+							},
+							// optipng.enabled: false will disable optipng
+							optipng: {
+								enabled: false
+							},
+							pngquant: {
+								quality: [0.65, 0.9],
+								speed: 4
+							},
+							gifsicle: {
+								interlaced: false
+							},
+							// the webp option will enable WEBP
+							webp: {
+								quality: 75
+							}
+						}
 					}
-					// 		{
-					// 			loader: 'image-webpack-loader',
-					// 			options: {
-					// 				mozjpeg: {
-					// 					progressive: true
-					// 				},
-					// 				// optipng.enabled: false will disable optipng
-					// 				optipng: {
-					// 					enabled: false
-					// 				},
-					// 				pngquant: {
-					// 					quality: [0.65, 0.9],
-					// 					speed: 4
-					// 				},
-					// 				gifsicle: {
-					// 					interlaced: false
-					// 				},
-					// 				// the webp option will enable WEBP
-					// 				webp: {
-					// 					quality: 75
-					// 				}
-					// 			}
-					// 		}
 				]
 			},
 			// 解析js或者jsx文件的新语法
@@ -343,5 +344,13 @@ module.exports = {
 		progress: true, // 显示加载进度条
 		contentBase: './dist', // 映射地址
 		compress: true // 是否压缩
+	},
+	resolve: {
+		alias: {
+			'@ant-design/icons/lib/dist': path.resolve(
+				__dirname,
+				'src/utils/icons.js'
+			)
+		}
 	}
 };
