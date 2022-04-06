@@ -4,6 +4,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App.jsx';
+import { HashRouter } from 'react-router-dom';
 // React全局定义时间格式化
 export default React.Component.prototype.dateFormat = (ctime) => {
 	let date = new Date(ctime);
@@ -15,4 +16,9 @@ export default React.Component.prototype.dateFormat = (ctime) => {
 	const seconds = (date.getSeconds() + '').padStart(2, '0');
 	return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
 };
-ReactDOM.render(<App></App>, document.getElementById('app'));
+ReactDOM.render(
+	<HashRouter>
+		<App></App>
+	</HashRouter>,
+	document.getElementById('app')
+);
