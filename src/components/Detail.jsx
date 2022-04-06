@@ -15,6 +15,8 @@ import data1 from '../data/detail-1291841.js';
 // import data2 from '../data/detail-1851857.js';
 // 导入挂载到prototype上时间格式化方法
 import dateFormat from '../main.js';
+// 动态修改title
+import DocumentTitle from 'react-document-title';
 import { Spin, Alert, Button, Icon, Rate } from 'antd';
 const ButtonGroup = Button.Group;
 // 布局需要的测试图片
@@ -33,10 +35,12 @@ export default class Detail extends React.Component {
 	}
 	render() {
 		return (
-			<div className={Det.box}>
-				{/* 	{this.state.id} */}
-				{this.controlShow()}
-			</div>
+			<DocumentTitle title="电影详情">
+				<div className={Det.box}>
+					{/* 	{this.state.id} */}
+					{this.controlShow()}
+				</div>
+			</DocumentTitle>
 		);
 	}
 	// 1.控制显示加载前动画和加载后详情页

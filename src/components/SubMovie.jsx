@@ -29,6 +29,7 @@ export default class SubMovie extends React.Component {
 		};
 	}
 	render() {
+		console.log(this.props);
 		return (
 			<div className={Sub.sub_movie}>
 				{/* <h3>这是电影显示页面</h3> */}
@@ -181,6 +182,8 @@ export default class SubMovie extends React.Component {
 		// 		}
 		// 	});
 	};
+	// 初始状态下，刚刚点击【电影】按钮那一刹那，componentWillReceiveProps这个钩子并没有执行，页面顶端渲染的默认
+	// "in_theaters------1"来自Movie和SubMovie路由父组件到路由的子组件的关系(具体说：Movie中有link,对应到组件SubMovie)
 	UNSAFE_componentWillReceiveProps(nextProps) {
 		console.log(nextProps);
 		// this.setState({
