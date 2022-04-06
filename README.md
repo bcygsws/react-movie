@@ -316,3 +316,21 @@ this.props 传递
 
 -   含义：for---in 循环可以遍历数组上的对象自身和其原型上的所有【可枚举属性】
 -   注意：上述五个知识点中，只有 for---in 循环涉及到了原型上的属性，可以通过 obj.hasOwnProperty(key)这个方法过滤掉原型上的属性
+
+## 问题 10
+
+### 场景
+
+-   为开发好的页面添加一个跟随路由切换的标题
+
+### 解决方案
+
+#### 方案一:使用 history 的 listen 监听和生命周期钩子中处理 window.location.hash
+
+1. 在 App.jsx 的构造函数中监听路由的值，并使用 document.title 设置标题；在此之前，要主要观察 App.jsx 组件中是否有 HashRouter,如果有最好将其移至 ReactDom.render(\<HashRouter\>\<App\>\<\/App\>\<\/HashRouter\>, document.getElementById('app'))中声明。原因是：要在 App.jsx 的 this.props 属性中，获取不到 history 对象。而我们直到，高阶组件 withRouter 可以帮我们实现这个目的；然后，在构造函数中使用 props.history.listen(cb); cb=(location)=>{// location.pathname};
+2. 还有个小 bug:当手动刷新页面时，监听函数 listen 不再有效了。手动刷新，当前组件肯定是从零开始重建，那么 componentWillMount 钩子肯定执行；window.location.hash 可以拿到刷新后的当前路由的 hash 值，处理 hash 值，来 document.title 设置 title 标题；
+3. 优化：可以封装一个成员函数，来处理不同的路由地址对应的 title 标题。addTitle(cur_path),cur_path 的值在正常切换时，listen 监听起作用，cur_path 传入的是 location.pathname;手动刷新时，cur_path 传入的是 window.location.hash.slice(1),hash 值多一个#号
+
+#### 方案二：使用插件 react-document-title 来实现，引入后，成为一个标签，加入到各路由对应的组件的顶层，并设置一个 title 值即可
+
+#### 方案三：使用插件 react-helmet,更灵活，可以修改主页 index.html 的元信息，如：meta、link 和 title 等

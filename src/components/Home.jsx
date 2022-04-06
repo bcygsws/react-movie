@@ -1,4 +1,6 @@
 import React from 'react';
+// 动态设置页面的标题插件
+import DocumentTitle from 'react-document-title';
 // 导入Hello2组件
 /**
  *
@@ -62,9 +64,11 @@ export default class Home extends React.Component {
 	}
 	render() {
 		return (
-			<div>
-				<h3>这是home组件</h3>
-			</div>
+			<DocumentTitle title="主页">
+				<div>
+					<h3>这是home组件</h3>
+				</div>
+			</DocumentTitle>
 		);
 	}
 	// 生命周期钩子
