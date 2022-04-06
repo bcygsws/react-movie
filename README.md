@@ -316,3 +316,14 @@ this.props 传递
 
 -   含义：for---in 循环可以遍历数组上的对象自身和其原型上的所有【可枚举属性】
 -   注意：上述五个知识点中，只有 for---in 循环涉及到了原型上的属性，可以通过 obj.hasOwnProperty(key)这个方法过滤掉原型上的属性
+
+## 问题 9
+
+### 场景
+
+-   babel-plugin-import 插件，在.babelrc 中配置了，按需导入。打包时，图标的 js 文件 dist.js 文件仍然被打包进去了（webpack 打包可视化分析插件，webpack-bundle-analyzer），导致打包体积过大
+
+### 解决办法
+
+-   在配置文件 webpack.pub.conifg.js 文件中，添加一级节点 resolve，然后起别名 alias 对象中，配置路径映射。将"@ant-design/icons/lib/dist"路径映射到自定义文件路径，定义在了 src/utils/icons.js 文件中
+-   这个自定义文件导出了，组件所依赖的基本对象，主要包括两大类：框线和实底风格;框线的有 5 个，在@ant-design/……/outline 文件夹下，包括 CloseOutline、UpOutline、DownOutline、LeftOutline、RightOutline;实底的有两个：在@ant-design/……/fill 文件夹下，包括 CheckCircleFill 和 CloseCircleFill
