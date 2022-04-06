@@ -23,7 +23,8 @@ module.exports = {
 			'react-dom',
 			'react-router-dom',
 			'react-loadable',
-			'prop-types'
+			'prop-types',
+			'react-document-title'
 		],
 		antd1: 'antd'
 	},
@@ -94,7 +95,7 @@ module.exports = {
 					// 抽离第三方库
 					chunks: 'all',
 					// 键值可以自定义
-					test: /^(react|react-dom|react-router-dom|prop-types|react-loadable)$/,
+					test: /^(react|react-dom|react-router-dom|prop-types|react-loadable|react-document-title)$/,
 					// test: /[\/]node_modules[\/]/,
 					// test: (module) =>
 					// 	/react/.test(module.context) ||
