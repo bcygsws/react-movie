@@ -361,6 +361,7 @@ module.exports = {
 		compress: true // 是否压缩
 	},
 	resolve: {
+		// 通过起别名的方式把原路径映射到./utils/icons.js
 		alias: {
 			'@ant-design/icons/lib/dist': path.resolve(
 				__dirname,
