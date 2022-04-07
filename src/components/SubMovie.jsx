@@ -4,6 +4,8 @@ import PerMv from './PerMv.jsx';
 // import fetchJsonp from 'fetch-jsonp';
 // 导入分页组件
 import { Pagination, Spin, Alert } from 'antd';
+// 拦截器配置文件和封装的get请求方法
+import { get } from '../utils/index.js';
 /**
  * @ 参考文档：https://www.jianshu.com/p/8d3cf411a639
  * 高阶组件中的withRouter, 作用是将一个组件包裹进Route里面, 然后react-router的三个对象
@@ -133,27 +135,43 @@ export default class SubMovie extends React.Component {
 		// 	});
 
 		// top250电影接口
-		fetch(
+		// fetch(
+		// 	`https://api.wmdb.tv/api/v1/top?type=${type}&skip=${page}&limit=${this.state.pageSize}&lang=${lang}`
+		// )
+		// 	.then((response) => {
+		// 		console.log(response);
+		// 		// 响应数据流，使用json处理
+		// 		if (response.status === 200) {
+		// 			return response.json();
+		// 		}
+		// 	})
+		// 	.then((data) => {
+		// 		console.log(data);
+		// 		this.state.list = data;
+		// 		// data是一个数组，如果长度为0，就是空数组data.length===0
+		// 		if (data.length) {
+		// 			// 从动画切换到电影列表，触发页面更新
+		// 			this.setState({
+		// 				isLoading: false
+		// 			});
+		// 		}
+		// 	});
+		// 为了使用顶部进度条nprogress，使用axios的拦截器
+		get(
 			`https://api.wmdb.tv/api/v1/top?type=${type}&skip=${page}&limit=${this.state.pageSize}&lang=${lang}`
-		)
-			.then((response) => {
-				console.log(response);
-				// 响应数据流，使用json处理
-				if (response.status === 200) {
-					return response.json();
-				}
-			})
-			.then((data) => {
-				console.log(data);
-				this.state.list = data;
-				// data是一个数组，如果长度为0，就是空数组data.length===0
-				if (data.length) {
-					// 从动画切换到电影列表，触发页面更新
-					this.setState({
-						isLoading: false
-					});
-				}
-			});
+		).then((res) => {
+			console.log(res);
+			console.log(res.data);
+			this.state.list = res.data;
+			// data是一个数组，如果长度为0，就是空数组data.length===0
+			if (res.data.length) {
+				// 从动画切换到电影列表，触发页面更新
+				this.setState({
+					isLoading: false
+				});
+			}
+		});
+
 		/**
 		 * @ 默认的window.fetch可能弹出跨域限制的错误，此时可以使用安装fetch-jsonp的方法来解决。
 		 * fetch-jsonp需要安装包，而默认的fetch则不需要装包。但是，使用fetch-jsonp一直提示请求数据超时。

@@ -1,7 +1,8 @@
 import React from 'react';
 // 导入react-router相关的包，web中使用react-router-dom,可以根据是开发web还是App，选择安装不同的包
 // 按需导出常用的三个
-import { Route, Link, Switch, Redirect, withRouter } from 'react-router-dom';
+// import { Route, Link, Switch, Redirect, withRouter } from 'react-router-dom';
+import { Route, Link, Switch, Redirect } from 'react-router-dom';
 // import loadable from './utils/loadable.js';
 // 导入views中的三个子组件
 import Home from './components/Home.jsx';
@@ -95,17 +96,14 @@ class App extends React.Component {
 							}}
 						>
 							<Switch>
-								<Route path="/home" component={Home}>
-								</Route>
+								<Route path="/home" component={Home}></Route>
 								{/* 省去做/movie自动跳转到/movie/in_theaters/1的过程，Link的to属性：直接设定为/movie/in_theaters/1。但是在
 								Route中还是要写/movie,模糊模式下，/movie是可以匹配所有的/movie系列路由,/movie是可以匹配到/movie/in_theaters/1的，
 							此处path不能写成/movie/in_theaters/1
 							结论：如果某个路由还有有多个子路由，那么在Route中path不能写成子路由其中一个，而应该
 							尽可能模糊，让它能匹配到所有的子路由 */}
-								<Route path="/movie" component={Movie}>
-								</Route>
-								<Route path="/about" component={About}>
-								</Route>
+								<Route path="/movie" component={Movie}></Route>
+								<Route path="/about" component={About}></Route>
 								{/* /movie直接重定向/movie/in_theaters/1 ,注意：Redirect必须放在Switch标签的最后一行*/}
 								{/* 这种方式有一个问题 */}
 								{/* <Redirect
@@ -160,7 +158,7 @@ class App extends React.Component {
 		 */
 	}
 }
-export default withRouter(App);
+export default App;
 /**
  * @ HashRouter表示一个路由根容器，将来所有路由相关的东西都要包裹在里面，一个网站中HashRouter只出现一次
  * Route 路由规则
