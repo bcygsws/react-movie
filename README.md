@@ -334,3 +334,45 @@ this.props 传递
 #### 方案二：使用插件 react-document-title 来实现，引入后，成为一个标签，加入到各路由对应的组件的顶层，并设置一个 title 值即可
 
 #### 方案三：使用插件 react-helmet,更灵活，可以修改主页 index.html 的元信息，如：meta、link 和 title 等
+
+## 问题 11
+
+### 场景
+
+-   浏览器顶部进度条
+
+### 解决方案
+
+-   npm i npprogress --save-dev
+-   npm install --save hoist-non-react-statics,[hɔɪst]升起，起重，吊起；hoist-non-react-statics 插件作用类似 Object.assign。将子组件的静态方法拷贝到另一个组件上，但会屏蔽 react 关键字的静态成员，以免他们被覆盖
+-   [具体代码，参考](https://blog.csdn.net/m0_37890289/article/details/109739783?spm=1001.2101.3001.6661.1&utm_medium=distribute.pc_relevant_t0.none-task-blog-2%7Edefault%7ECTRLIST%7ETopBlog-1.topblog&depth_1-utm_source=distribute.pc_relevant_t0.none-task-blog-2%7Edefault%7ECTRLIST%7ETopBlog-1.topblog&utm_relevant_index=1)
+
+#### 如果使用了 axios 请求数据，则使用拦截器(请求拦截器和响应拦截器)
+
+-   请求拦截器
+-   const instance=axios.create({timeout:5000});
+-   instance.interceptors.request.use((config)=>{
+-   NProgress.start();
+-   return config;
+-   },function(err){
+-   return Promise.reject('error');
+-   })
+-   下面是响应拦截器
+-   instance.interceptors.response.use((response)=>{
+-   NProgress.done();
+-   return response;
+-   },function(err){
+-   return Promise.reject('err);
+-   })
+
+## 问题 12
+
+## 场景
+
+-   web 中播放视频
+
+### 解决方案
+
+-   react-player
+-   video-react
+-   知乎视频播放器 Griffith-[文档](https://www.open-open.com/project/5098117654808693719.html)

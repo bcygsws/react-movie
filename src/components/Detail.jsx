@@ -18,6 +18,8 @@ import dateFormat from '../main.js';
 // 动态修改title
 import DocumentTitle from 'react-document-title';
 import { Spin, Alert, Button, Icon, Rate } from 'antd';
+// 导入使用axios封装的get请求方法和拦截器配置恩建
+// import { get } from '../utils/index.js';
 const ButtonGroup = Button.Group;
 // 布局需要的测试图片
 // import URLImg from '../images/model.jpg';
@@ -191,6 +193,11 @@ export default class Detail extends React.Component {
 		 If an opaque response serves your needs, set the request's mode to 'no-cors' to fetch the resource with CORS
 		  disabled.
 		*/
+		// get(`https://movie.querydata.org/api?id={this.state.id}`).then(
+		// 	(res) => {
+		// 		console.log(res);
+		// 	}
+		// );
 		this.getDetail(this.state.id);
 	}
 	// 封装根据id请求详情数据的方法
