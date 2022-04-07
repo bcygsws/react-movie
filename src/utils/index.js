@@ -19,7 +19,7 @@ const config = {
 };
 NProgress.configure(config);
 const instance = axios.create({
-	timeout: 1500
+	timeout: 3000 // 设置延时时间更长，以保证异步请求数据完成，设置的值过小，会提示请求超时警告
 });
 // 1.拦截器
 // axios的请求和响应一旦发生，拦截器即开始工作
