@@ -9,7 +9,9 @@
 				/* bgs属性，值为cover,放大或缩小图片，铺满父容器 */
 				/* 	background: #eee url('../images/logo.png') no-repeat center; */
 				background: url('../images/logo.png') no-repeat center;
-				background-size: cover;
+				/* background-position：center;以这个原有图片的正中心为中心，割取长120，宽31的图片，搭配定位属性的是
+				background-origin:这个属性，其作用是定义相对定位图片的位置，可取border-box,padding-box和content-box */
+				background-size: cover; // 还是以center为中心点，设置background-size后，就可以先缩放，再切割
 				margin: 16px 24px 16px 0;
 				float: left;
 			}

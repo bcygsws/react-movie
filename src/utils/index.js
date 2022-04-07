@@ -19,7 +19,7 @@ const config = {
 };
 NProgress.configure(config);
 const instance = axios.create({
-	timeout: 1500
+	timeout: 3000 // 延时，3s
 });
 // 1.拦截器
 // axios的请求和响应一旦发生，拦截器即开始工作
