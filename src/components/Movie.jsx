@@ -42,7 +42,7 @@ export default class Movie extends React.Component {
 							</Menu.Item>
 						</Menu>
 					</Sider>
-					<Layout style={{ paddingLeft: '1px' }}>
+					<Layout style={{ borderLeft: '1px solid #ddd' }}>
 						<Content
 							style={{
 								padding: 12,

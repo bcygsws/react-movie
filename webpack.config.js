@@ -28,7 +28,9 @@ module.exports = {
 			'nprogress'
 		],
 		antd1: 'antd',
-		axios: 'axios'
+		axios: 'axios',
+		// react视频播放插件体积较大，单独打包
+		react_player: 'react-player'
 	},
 	// 输出配置
 	output: {
@@ -128,6 +130,13 @@ module.exports = {
 					test: /^axios$/,
 					minChunks: 1,
 					name: 'axios',
+					priority: 100
+				},
+				// react-player单独打包
+				react_player: {
+					test: /^react-player$/,
+					minChunks: 1,
+					name: 'react_player',
 					priority: 100
 				},
 				'async-chunks': {

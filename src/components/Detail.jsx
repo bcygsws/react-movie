@@ -9,15 +9,17 @@ import React from 'react';
 // import fetchJsonp from 'fetch-jsonp';
 // import { withRouter } from 'react-router-dom';
 // 导入Detail组件样式
+import { Spin, Alert, Button, Icon, Rate } from 'antd';
+import data1 from '../data/detail-1291841.js';
 import Det from '../css/detail.less';
 // 从src/data文件夹下导入模拟数据
-import data1 from '../data/detail-1291841.js';
 // import data2 from '../data/detail-1851857.js';
 // 导入挂载到prototype上时间格式化方法
 import dateFormat from '../main.js';
 // 动态修改title
 import DocumentTitle from 'react-document-title';
-import { Spin, Alert, Button, Icon, Rate } from 'antd';
+// 导入视频播放组件
+import VideoPlay from './VideoPlay.jsx';
 // 导入使用axios封装的get请求方法和拦截器配置恩建
 // import { get } from '../utils/index.js';
 const ButtonGroup = Button.Group;
@@ -32,7 +34,9 @@ export default class Detail extends React.Component {
 			// 默认显示的是加载动画
 			isLoading: true,
 			// 详情数据data数组
-			detail: {}
+			detail: {},
+			// 存储播放视频的url
+			url: ''
 		};
 	}
 	render() {
@@ -61,74 +65,75 @@ export default class Detail extends React.Component {
 			// 先让isLoading为true,便于测试详情页界面
 			return (
 				<dl className={Det.parent}>
-					<dt className={Det.content}>
+					<dt className={Det._dt}>
+						<VideoPlay url={this.state.url} />
+						<div className={Det.doc}>
+							<ul className={Det.son}>
+								{/* className模块化，多个类名可以使用模板字符串处理 */}
+								<li className={`${Det.mv_name} ${Det.pub}`}>
+									{this.state.detail.data[0].name}
+								</li>
+								<li className={`${Det.pub} ${Det.rating}`}>
+									评分：
+									<Rate
+										allowHalf
+										disabled
+										defaultValue={this.showStar(
+											this.state.detail.imdbRating
+										)}
+									/>
+									<sup className={Det.up}>
+										{this.state.detail.imdbRating}
+									</sup>
+									推荐
+								</li>
+								<li className={`${Det.pub}`}>
+									别名：{this.state.detail.alias}
+								</li>
+								<li className={`${Det.pub}`}>
+									类型：{this.state.detail.data[0].genre}
+								</li>
+								<li className={`${Det.pub}`}>
+									国家/地区：
+									{this.state.detail.data[0].country}
+								</li>
+								<li className={`${Det.pub}`}>
+									语言：{this.state.detail.data[0].language}
+								</li>
+								<li className={`${Det.pub}`}>
+									上传日期：
+									{dateFormat(this.state.detail.createdAt)}
+								</li>
+								<li className={`${Det.mv_dir} ${Det.pub}`}>
+									导演：
+									{this.state.detail.director[0].data[0].name}
+								</li>
+								<li className={`${Det.pub}`}>
+									主演：
+									{this.getActors(this.state.detail.actor)}
+								</li>
+								<li>
+									<ButtonGroup
+										onClick={this.backList.bind(this)}
+									>
+										<Button type="primary">
+											<Icon type="left" />
+											返回列表
+										</Button>
+									</ButtonGroup>
+								</li>
+							</ul>
+						</div>
+					</dt>
+					<dd className={Det._dd}>
 						<ul className={Det.son}>
 							{/* className模块化，多个类名可以使用模板字符串处理 */}
-							<li className={`${Det.mv_name} ${Det.pub}`}>
-								{this.state.detail.data[0].name}
-							</li>
-							<li className={`${Det.pub} ${Det.rating}`}>
-								评分：
-								<Rate
-									allowHalf
-									disabled
-									defaultValue={this.showStar(
-										this.state.detail.imdbRating
-									)}
-								/>
-								<sup className={Det.up}>
-									{this.state.detail.imdbRating}
-								</sup>
-								推荐
-							</li>
-							<li className={`${Det.pub}`}>
-								别名：{this.state.detail.alias}
-							</li>
-							<li className={`${Det.pub}`}>
-								类型：{this.state.detail.data[0].genre}
-							</li>
-							<li className={`${Det.pub}`}>
-								国家/地区：{this.state.detail.data[0].country}
-							</li>
-							<li className={`${Det.pub}`}>
-								语言：{this.state.detail.data[0].language}
-							</li>
-							<li className={`${Det.pub}`}>
-								上传日期：
-								{dateFormat(this.state.detail.createdAt)}
-							</li>
-							<li className={`${Det.mv_dir} ${Det.pub}`}>
-								导演：
-								{this.state.detail.director[0].data[0].name}
-							</li>
-							<li className={`${Det.pub}`}>
-								主演：{this.getActors(this.state.detail.actor)}
-							</li>
 
 							<li className={`${Det.mv_des} ${Det.pub}`}>
 								故事梗概：
 								{this.state.detail.data[0].description}
 							</li>
-							<li>
-								<ButtonGroup onClick={this.backList.bind(this)}>
-									<Button type="primary">
-										<Icon type="left" />
-										返回列表
-									</Button>
-								</ButtonGroup>
-							</li>
 						</ul>
-					</dt>
-					<dd className={Det.dd}>
-						<img
-							src={this.state.detail.data[0].poster}
-							title="电影海报"
-							alt=""
-							height="80%"
-						/>
-						<p className={Det.p}>
-							<span>Pic:《教父2》</span>
-						</p>
 					</dd>
 				</dl>
 			);
@@ -173,10 +178,11 @@ export default class Detail extends React.Component {
 		arr.forEach((item, index) => {
 			// 取前10个演员名字
 			if (index <= 9) {
-				str = str + '\t' + item.data[0].name;
+				str = str + '/' + item.data[0].name;
 			}
 		});
-		return str;
+		// 去掉拼接好的“主演”字符串为首的那个"/"
+		return str.slice(1);
 	};
 	// 从PerMv中编程式导航，重新匹配了组件，组件Detail是开始重建，则componentWillMount钩子肯定执行
 	// 加载中页面默认开始渲染，但是从后台请求数据是个异步操作，所以【加载中……】界面渲染完成后，componentWillMount中请求后台数据异步任务
@@ -244,7 +250,9 @@ export default class Detail extends React.Component {
 		setTimeout(() => {
 			this.setState({
 				isLoading: false,
-				detail: data1
+				detail: data1,
+				// 测试使用，youtube视频没有跨域限制
+				url: 'https://www.youtube.com/watch?v=rMVAqU8fmio'
 			});
 		}, 2000);
 
