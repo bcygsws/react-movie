@@ -327,6 +327,7 @@ this.props 传递
 
 -   在配置文件 webpack.pub.conifg.js 文件中，添加一级节点 resolve，然后起别名 alias 对象中，配置路径映射。将"@ant-design/icons/lib/dist"路径映射到自定义文件路径，定义在了 src/utils/icons.js 文件中
 -   这个自定义文件导出了，组件所依赖的基本对象，主要包括两大类：框线和实底风格;框线的有 5 个，在@ant-design/……/outline 文件夹下，包括 CloseOutline、UpOutline、DownOutline、LeftOutline、RightOutline;实底的有两个：在@ant-design/……/fill 文件夹下，包括 CheckCircleFill 和 CloseCircleFill
+
 ## 问题 10
 
 ### 场景
@@ -379,10 +380,40 @@ this.props 传递
 
 ## 场景
 
--   web 中播放视频
+-   web 网页中播放视频数据流
 
 ### 解决方案
 
--   react-player
 -   video-react
 -   知乎视频播放器 Griffith-[文档](https://www.open-open.com/project/5098117654808693719.html)
+-   react-player，推荐使用；比较通用。如果传入 youtube 网址(如： url: \'https://www.youtube.com/watch?v=rMVAqU8fmio\')，视频播放器的外观直接就是 youtube 官方的外观；如果传入的是普通文件路径 ReactPlayer 的 url={[{src:\'a.ogg\',type:\'video/ogg\'}]}或者直接 url={[\'video\/fans.mp4\']}，则显示通用的外观
+
+## 问题 13
+
+### 场景
+
+-   打包好的文件，使用 live-server 打开时，会报一个错误"Failed to execute 'postMessage' on 'DOMWindow': The target origin provided ('https://xxx.cn') does n"
+-   控制台提示：Failed to execute 'postMessage' on 'DOMWindow': The target origin provided ('<URL>') does not match the recipient window's origin ('<URL>').
+
+### 原因
+
+-   引入的 react-player 插件，使用的是
+
+-   [参考文档：](https://blog.csdn.net/weixin_45045689/article/details/119571960?spm=1001.2101.3001.6650.2&utm_medium=distribute.pc_relevant.none-task-blog-2%7Edefault%7ECTRLIST%7ERate-2.pc_relevant_default&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2%7Edefault%7ECTRLIST%7ERate-2.pc_relevant_default)
+-   [参考文档：Vue 进阶（九十二）：应用 postMessage 实现窗口通信](https://shq5785.blog.csdn.net/article/details/104042541?spm=1001.2101.3001.6650.3&utm_medium=distribute.pc_relevant.none-task-blog-2%7Edefault%7ECTRLIST%7ERate-3.pc_relevant_default&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2%7Edefault%7ECTRLIST%7ERate-3.pc_relevant_default)
+-   [参考文档：Vue 进阶（八十六）：iframe 结合 window.postMessage 实现跨域通信](https://blog.csdn.net/sunhuaqiang1/article/details/103281406)
+-   [参考文档：两个跨域页面进行跳转传参的终极方案](https://www.jianshu.com/p/6be6c3f2867a)
+-   [vue 中使用 iframe+postMessage 进行跨项目的通信](https://blog.csdn.net/weixin_44022194/article/details/107959725?spm=1001.2101.3001.6650.1&utm_medium=distribute.pc_relevant.none-task-blog-2%7Edefault%7ECTRLIST%7ERate-1.pc_relevant_antiscanv2&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2%7Edefault%7ECTRLIST%7ERate-1.pc_relevant_antiscanv2&utm_relevant_index=2)
+
+### 解决方案
+#### 方案一,不起作用
+-   <body>
+-               <script>
+-               	// document.domain实现跨域，声明target origin为'www.youtube.com'
+-               	document.domain = 'www.youtube.com';
+-               </script>
+-               <div id="app"></div>
+-   </body>
+-   在 index.html 文件中声明 target orgin 是www.youtube.com,语法如上所示，将目标源路径赋值给，不包括协议名称https，document.domain赋值
+-   [document.domain 跨域参考文档](https://segmentfault.com/a/1190000005863659)
+#### 方案二，试着从react-player着手
