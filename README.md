@@ -406,14 +406,28 @@ this.props 传递
 -   [vue 中使用 iframe+postMessage 进行跨项目的通信](https://blog.csdn.net/weixin_44022194/article/details/107959725?spm=1001.2101.3001.6650.1&utm_medium=distribute.pc_relevant.none-task-blog-2%7Edefault%7ECTRLIST%7ERate-1.pc_relevant_antiscanv2&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2%7Edefault%7ECTRLIST%7ERate-1.pc_relevant_antiscanv2&utm_relevant_index=2)
 
 ### 解决方案
+
 #### 方案一,不起作用
+
 -   <body>
--               <script>
--               	// document.domain实现跨域，声明target origin为'www.youtube.com'
--               	document.domain = 'www.youtube.com';
--               </script>
--               <div id="app"></div>
+-                 <script>
+-                 	// document.domain实现跨域，声明target origin为'www.youtube.com'
+-                 	document.domain = 'www.youtube.com';
+-                 </script>
+-                 <div id="app"></div>
 -   </body>
 -   在 index.html 文件中声明 target orgin 是www.youtube.com,语法如上所示，将目标源路径赋值给，不包括协议名称https，document.domain赋值
 -   [document.domain 跨域参考文档](https://segmentfault.com/a/1190000005863659)
-#### 方案二，试着从react-player着手
+
+#### 方案二，试着从 react-player 着手
+
+## 问题 13
+
+### 问题描述
+
+-   ERROR in ./src/images/logo.pn Module build failed (from ./node_modules/image-webpack-loader/index.js):
+    Error: Cannot find module 'imagemin-gifsicl   
+### 解决方案
+- nrm ls
+- nrm use cnpm
+- 使用cnpm安装包 "image-webpack-loader": "^8.1.0"
